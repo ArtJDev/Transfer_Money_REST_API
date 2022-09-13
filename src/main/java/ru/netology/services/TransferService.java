@@ -19,14 +19,14 @@ public class TransferService {
     }
 
     @Transactional
-    public void transferMoney(String cardFromNumber, String cardFromValidTill, String cardFromCVV, String cardToNumber, Amount amount) {
+    public void transferMoney(long cardFromNumber, String cardFromValidTill, String cardFromCVV, long cardToNumber, Amount amount) {
         Card sender = cardHolderRepository.findById(cardFromNumber)
                 .orElseThrow(() -> new CardNumberNotFoundException("Номер карты отправителя не найден"));
 
         Card receiver = cardHolderRepository.findById(cardToNumber)
                 .orElseThrow(() -> new CardNumberNotFoundException("Номер карты получателя не найден"));
 
-        if (!cardFromValidTill.equals(sender.getValidTill())){
+        if (!cardFromValidTill.equals(sender.getValidtill())){
             throw new CardInvalidDateException();
         }
         if (!cardFromCVV.equals(sender.getCvv())) {

@@ -1,15 +1,13 @@
 package ru.netology.dto;
 
-import java.math.BigInteger;
-
 public class TransferRequest {
-    private String cardFromNumber;
+    private long cardFromNumber;
     private String cardFromValidTill;
     private String cardFromCVV;
-    private String cardToNumber;
+    private long cardToNumber;
     private Amount amount;
 
-    public TransferRequest(String cardFromNumber, String cardFromValidTill, String cardFromCVV, String cardToNumber, Amount amount) {
+    public TransferRequest(long cardFromNumber, String cardFromValidTill, String cardFromCVV, long cardToNumber, Amount amount) {
         this.cardFromNumber = cardFromNumber;
         this.cardFromValidTill = cardFromValidTill;
         this.cardFromCVV = cardFromCVV;
@@ -17,11 +15,11 @@ public class TransferRequest {
         this.amount = amount;
     }
 
-    public String getCardFromNumber() {
+    public long getCardFromNumber() {
         return cardFromNumber;
     }
 
-    public void setCardFromNumber(String cardFromNumber) {
+    public void setCardFromNumber(long cardFromNumber) {
         this.cardFromNumber = cardFromNumber;
     }
 
@@ -41,11 +39,11 @@ public class TransferRequest {
         this.cardFromCVV = cardFromCVV;
     }
 
-    public String getCardToNumber() {
+    public long getCardToNumber() {
         return cardToNumber;
     }
 
-    public void setCardToNumber(String cardToNumber) {
+    public void setCardToNumber(long cardToNumber) {
         this.cardToNumber = cardToNumber;
     }
 

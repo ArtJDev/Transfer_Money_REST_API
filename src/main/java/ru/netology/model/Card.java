@@ -2,31 +2,28 @@ package ru.netology.model;
 
 import org.springframework.data.annotation.Id;
 
-import java.math.BigInteger;
-
 public class Card {
     @Id
-    private int id;
-    private String number;
-    private String validTill;
+    private long number;
+    private String validtill;
     private String cvv;
     private int amount;
     private String currency;
 
-    public String getNumber() {
+    public long getNumber() {
         return number;
     }
 
-    public void setNumber(String number) {
+    public void setNumber(long number) {
         this.number = number;
     }
 
-    public String getValidTill() {
-        return validTill;
+    public String getValidtill() {
+        return validtill;
     }
 
-    public void setValidTill(String validTill) {
-        this.validTill = validTill;
+    public void setValidtill(String validtill) {
+        this.validtill = validtill;
     }
 
     public String getCvv() {
@@ -52,4 +49,5 @@ public class Card {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
 }
