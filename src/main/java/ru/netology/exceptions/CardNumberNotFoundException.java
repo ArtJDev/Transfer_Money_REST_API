@@ -5,12 +5,10 @@ import org.springframework.http.ResponseEntity;
 
 public class CardNumberNotFoundException extends RuntimeException {
     private final String message;
+    private final ResponseEntity<String> response;
 
     public CardNumberNotFoundException(String message) {
-        this(new ResponseEntity<String>(message, HttpStatus.BAD_REQUEST));
-    }
-
-    public ResponseEntity<String> exception (String message){
-        return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        this.message = message;
+        this.response = new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
     }
 }

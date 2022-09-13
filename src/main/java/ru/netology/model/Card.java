@@ -2,8 +2,11 @@ package ru.netology.model;
 
 import org.springframework.data.annotation.Id;
 
+import java.math.BigInteger;
+
 public class Card {
     @Id
+    private int id;
     private String number;
     private String validTill;
     private String cvv;

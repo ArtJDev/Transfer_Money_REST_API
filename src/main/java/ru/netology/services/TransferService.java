@@ -1,17 +1,13 @@
 package ru.netology.services;
-package com.example.services;
-
-import com.example.exceptions.AccountNotFoundException;
-import com.example.model.Account;
-import com.example.repositories.AccountRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.netology.dto.Amount;
+import ru.netology.exceptions.CardInvalidCvvException;
+import ru.netology.exceptions.CardInvalidDateException;
 import ru.netology.exceptions.CardNumberNotFoundException;
+import ru.netology.exceptions.NotEnoughMoneyException;
 import ru.netology.model.Card;
 import ru.netology.repositories.CardHolderRepository;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 @Service
 public class TransferService {
@@ -22,27 +18,28 @@ public class TransferService {
         this.cardHolderRepository = cardHolderRepository;
     }
 
-
     @Transactional
-    public void transferMoney(long idSender, long idReceiver, BigDecimal amount) {
-        Card sender = cardHolderRepository.findById(idSender)
-                .orElseThrow();
+    public void transferMoney(String cardFromNumber, String cardFromValidTill, String cardFromCVV, String cardToNumber, Amount amount) {
+        Card sender = cardHolderRepository.findById(cardFromNumber)
+                .orElseThrow(() -> new CardNumberNotFoundException("Номер карты отправителя не найден"));
 
-        Card receiver = cardHolderRepository.findById(idReceiver)
-                .orElseThrow(() -> new AccountNotFoundException());
+        Card receiver = cardHolderRepository.findById(cardToNumber)
+                .orElseThrow(() -> new CardNumberNotFoundException("Номер карты получателя не найден"));
 
-        BigDecimal senderNewAmount = sender.getAmount().subtract(amount);
-        BigDecimal receiverNewAmount = receiver.getAmount().add(amount);
+        if (!cardFromValidTill.equals(sender.getValidTill())){
+            throw new CardInvalidDateException();
+        }
+        if (!cardFromCVV.equals(sender.getCvv())) {
+            throw new CardInvalidCvvException();
+        }
+        if (amount.getValue() > sender.getAmount()) {
+            throw new NotEnoughMoneyException();
+        }
 
-        cardHolderRepository.changeAmount(idSender, senderNewAmount);
-        cardHolderRepository.changeAmount(idReceiver, receiverNewAmount);
-    }
+        int senderNewAmount = sender.getAmount() - amount.getValue();
+        int receiverNewAmount = receiver.getAmount() + amount.getValue();
 
-    public Iterable<Account> getAllAccounts() {
-        return accountRepository.findAll();
-    }
-
-    public List<Account> findAccountsByName(String name) {
-        return accountRepository.findAccountsByName(name);
+        cardHolderRepository.changeAmount(cardFromNumber, senderNewAmount);
+        cardHolderRepository.changeAmount(cardToNumber, receiverNewAmount);
     }
 }

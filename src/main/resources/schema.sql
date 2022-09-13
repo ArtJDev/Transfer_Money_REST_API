@@ -1,6 +1,7 @@
-create table cardholder
+create table card
 (
-    number    VARCHAR(16) NOT NULL PRIMARY KEY,
+    id        INT         NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    number    VARCHAR(16) NOT NULL,
     validTill VARCHAR(4)  NOT NULL,
     cvv       VARCHAR(4)  NOT NULL,
     amount    INT         NOT NULL,
