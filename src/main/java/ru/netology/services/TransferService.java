@@ -1,4 +1,6 @@
 package ru.netology.services;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.netology.dto.Amount;
@@ -11,6 +13,7 @@ import ru.netology.repositories.CardHolderRepository;
 
 @Service
 public class TransferService {
+    private Logger logger = LoggerFactory.getLogger(TransferService.class);
 
     private final CardHolderRepository cardHolderRepository;
 
@@ -41,6 +44,7 @@ public class TransferService {
 
         cardHolderRepository.changeAmount(cardFromNumber, senderNewAmount);
         cardHolderRepository.changeAmount(cardToNumber, receiverNewAmount);
+        logger.info("Транзакция завершена");
     }
 
     public Card getCardHolderRepository(long number) {
