@@ -1,7 +1,14 @@
 package ru.netology.exceptions;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 public class CardInvalidCvvException extends RuntimeException {
+    private final String message;
+
+    public CardInvalidCvvException(String message) {
+        this.message = message;
+    }
+
+    @Override
+    public String getMessage() {
+        return message;
+    }
 }

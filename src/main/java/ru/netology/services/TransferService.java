@@ -27,13 +27,13 @@ public class TransferService {
                 .orElseThrow(() -> new CardNumberNotFoundException("Номер карты получателя не найден"));
 
         if (!cardFromValidTill.equals(sender.getValidtill())){
-            throw new CardInvalidDateException();
+            throw new CardInvalidDateException("Неверная дата действия карты");
         }
         if (!cardFromCVV.equals(sender.getCvv())) {
-            throw new CardInvalidCvvException();
+            throw new CardInvalidCvvException("Неверный код cvv карты");
         }
         if (amount.getValue() > sender.getAmount()) {
-            throw new NotEnoughMoneyException();
+            throw new NotEnoughMoneyException("Недостаточно средств для перевода на счете карты");
         }
 
         int senderNewAmount = sender.getAmount() - amount.getValue();
@@ -41,5 +41,9 @@ public class TransferService {
 
         cardHolderRepository.changeAmount(cardFromNumber, senderNewAmount);
         cardHolderRepository.changeAmount(cardToNumber, receiverNewAmount);
+    }
+
+    public Card getCardHolderRepository(long number) {
+        return cardHolderRepository.findCardByNumber(number);
     }
 }

@@ -5,13 +5,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import ru.netology.dto.Amount;
 import ru.netology.dto.TransferRequest;
+import ru.netology.repositories.CardHolderRepository;
 import ru.netology.services.TransferService;
 
 @RestController
 public class TransferController {
     private final TransferService transferService;
 
-    public TransferController(TransferService transferService) {
+    public TransferController(TransferService transferService, CardHolderRepository cardHolderRepository) {
         this.transferService = transferService;
     }
 
@@ -24,5 +25,8 @@ public class TransferController {
         request.getCardToNumber(),
                 new Amount(request.getAmount().getValue(), request.getAmount().getCurrency())
         );
+        System.out.println(request);
+        System.out.println(transferService.getCardHolderRepository(request.getCardFromNumber()));
+        System.out.println(transferService.getCardHolderRepository(request.getCardToNumber()));
     }
 }
