@@ -4,24 +4,20 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.mockito.junit.jupiter.MockitoSettings;
-import org.mockito.quality.Strictness;
 import ru.netology.dto.Amount;
+import ru.netology.exceptions.CardInvalidCvvException;
+import ru.netology.exceptions.CardInvalidDateException;
 import ru.netology.exceptions.CardNumberNotFoundException;
+import ru.netology.exceptions.NotEnoughMoneyException;
 import ru.netology.model.Card;
 import ru.netology.repositories.CardHolderRepository;
 import ru.netology.services.TransferService;
 
-import java.math.BigDecimal;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,27 +56,110 @@ public class TransferServiceUnitTests {
     }
 
     @Test
-    public void cardNumberNotFoundExceptionTest() {
+    public void senderCardNumberNotFoundExceptionTest() {
+        Amount amount = new Amount(100, "RUB");
+        Exception exception = assertThrowsExactly(CardNumberNotFoundException.class, () ->
+                transferService.transferMoney(1000, "1111", "333", 2000, amount)
+        );
+        String expectedMessage = "1000";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    @Test
+    public void receiverCardNumberNotFoundExceptionTest() {
         Card sender = new Card();
         sender.setNumber(1000);
-        sender.setValidtill("0123");
-        sender.setCvv("111");
-        sender.setAmount(1000);
-        sender.setCurrency("RUB");
-
-        Amount amount = new Amount(100, "RUB");
 
         given(cardHolderRepository.findCardByNumber(sender.getNumber()))
                 .willReturn(Optional.of(sender));
 
-//        given(cardHolderRepository.findCardByNumber(2000L))
-//                .willReturn(Optional.empty());
+        Amount amount = new Amount(100, "RUB");
 
-        transferService.transferMoney(1000, "1111", "333", 2000, amount);
-
-
-//        verify(cardHolderRepository, never()).changeAmount(anyLong(), any());
+        Exception exception = assertThrowsExactly(CardNumberNotFoundException.class, () ->
+                transferService.transferMoney(1000, "1111", "333", 2000, amount)
+        );
+        String expectedMessage = "2000";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
     }
+
+    @Test
+    public void cardInvalidDateExceptionTest() {
+        Card sender = new Card();
+        sender.setNumber(1000);
+
+        Card receiver = new Card();
+        receiver.setNumber(2000);
+
+        given(cardHolderRepository.findCardByNumber(sender.getNumber()))
+                .willReturn(Optional.of(sender));
+
+        given(cardHolderRepository.findCardByNumber(receiver.getNumber()))
+                .willReturn(Optional.of(receiver));
+
+        Amount amount = new Amount(100, "RUB");
+
+        Exception exception = assertThrowsExactly(CardInvalidDateException.class, () ->
+                transferService.transferMoney(1000, "1111", "333", 2000, amount)
+        );
+        String expectedMessage = "дата";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    public void cardInvalidCvvExceptionTest() {
+        Card sender = new Card();
+        sender.setNumber(1000);
+        sender.setValidtill("1111");
+        sender.setCvv("222");
+
+        Card receiver = new Card();
+        receiver.setNumber(2000);
+
+        given(cardHolderRepository.findCardByNumber(sender.getNumber()))
+                .willReturn(Optional.of(sender));
+
+        given(cardHolderRepository.findCardByNumber(receiver.getNumber()))
+                .willReturn(Optional.of(receiver));
+
+        Amount amount = new Amount(100, "RUB");
+
+        Exception exception = assertThrowsExactly(CardInvalidCvvException.class, () ->
+                transferService.transferMoney(1000, "1111", "333", 2000, amount)
+        );
+        String expectedMessage = "cvv";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+    @Test
+    public void notEnoughMoneyExceptionTest() {
+        Card sender = new Card();
+        sender.setNumber(1000);
+        sender.setValidtill("1111");
+        sender.setCvv("333");
+        sender.setAmount(10);
+
+        Card receiver = new Card();
+        receiver.setNumber(2000);
+
+        given(cardHolderRepository.findCardByNumber(sender.getNumber()))
+                .willReturn(Optional.of(sender));
+
+        given(cardHolderRepository.findCardByNumber(receiver.getNumber()))
+                .willReturn(Optional.of(receiver));
+
+        Amount amount = new Amount(100, "RUB");
+
+        Exception exception = assertThrowsExactly(NotEnoughMoneyException.class, () ->
+                transferService.transferMoney(1000, "1111", "333", 2000, amount)
+        );
+        String expectedMessage = "Недостаточно средств";
+        String actualMessage = exception.getMessage();
+        assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+
 }
 
 
