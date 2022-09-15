@@ -50,14 +50,14 @@ public class Card {
         this.currency = currency;
     }
 
-    @Override
-    public String toString() {
-        return "Card{" +
-                "number=" + number +
-                ", validtill='" + validtill + '\'' +
-                ", cvv='" + cvv + '\'' +
-                ", amount=" + amount +
-                ", currency='" + currency + '\'' +
-                '}';
-    }
+//    @Override
+//    public String toString() {
+//        return "Card{" +
+//                "number=" + number +
+//                ", validtill='" + validtill + '\'' +
+//                ", cvv='" + cvv + '\'' +
+//                ", amount=" + amount +
+//                ", currency='" + currency + '\'' +
+//                '}';
+//    }
 }

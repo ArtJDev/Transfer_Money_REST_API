@@ -5,11 +5,11 @@ import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.CrudRepository;
 import ru.netology.model.Card;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface CardHolderRepository extends CrudRepository<Card, Long> {
     @Query("SELECT * FROM card WHERE number = :number")
-    Card findCardByNumber(long number);
+    Optional<Card> findCardByNumber(long number);
 
     @Modifying
     @Query("UPDATE card SET amount = :amount WHERE number = :number")

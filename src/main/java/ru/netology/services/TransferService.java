@@ -1,4 +1,5 @@
 package ru.netology.services;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import ru.netology.repositories.CardHolderRepository;
 
 @Service
 public class TransferService {
-    private Logger logger = LoggerFactory.getLogger(TransferService.class);
+    private final Logger logger = LoggerFactory.getLogger(TransferService.class);
 
     private final CardHolderRepository cardHolderRepository;
 
@@ -23,11 +24,12 @@ public class TransferService {
 
     @Transactional
     public void transferMoney(long cardFromNumber, String cardFromValidTill, String cardFromCVV, long cardToNumber, Amount amount) {
-        Card sender = cardHolderRepository.findById(cardFromNumber)
-                .orElseThrow(() -> new CardNumberNotFoundException("Номер карты отправителя не найден"));
+        logger.info("Начало транзакции");
+        Card sender = cardHolderRepository.findCardByNumber(cardFromNumber)
+                .orElseThrow(() -> new CardNumberNotFoundException("Карта отправителя " + cardFromNumber + " не найдена"));
 
-        Card receiver = cardHolderRepository.findById(cardToNumber)
-                .orElseThrow(() -> new CardNumberNotFoundException("Номер карты получателя не найден"));
+        Card receiver = cardHolderRepository.findCardByNumber(cardToNumber)
+                .orElseThrow(() -> new CardNumberNotFoundException("Карта получателя " + cardToNumber + " не найдена"));
 
         if (!cardFromValidTill.equals(sender.getValidtill())){
             throw new CardInvalidDateException("Неверная дата действия карты");
@@ -44,10 +46,12 @@ public class TransferService {
 
         cardHolderRepository.changeAmount(cardFromNumber, senderNewAmount);
         cardHolderRepository.changeAmount(cardToNumber, receiverNewAmount);
-        logger.info("Транзакция завершена");
+
+        logger.info("Перевод с карты " + cardFromNumber + " на карту " + cardToNumber
+                + " в сумме " + amount.getValue() + amount.getCurrency() + " успешно осуществлен.");
     }
 
     public Card getCardHolderRepository(long number) {
-        return cardHolderRepository.findCardByNumber(number);
+        return cardHolderRepository.findCardByNumber(number).get();
     }
 }
