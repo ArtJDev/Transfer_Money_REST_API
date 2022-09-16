@@ -49,7 +49,7 @@ public class TransferServiceUnitTests {
         given(cardHolderRepository.findCardByNumber(receiver.getNumber()))
                 .willReturn(Optional.of(receiver));
 
-        transferService.transferMoney(sender.getNumber(), "1111", "333", receiver.getNumber(), amount);
+        transferService.transferMoney(sender.getNumber(), sender.getValid(), sender.getCvv(), receiver.getNumber(), amount);
 
         verify(cardHolderRepository).changeAmount(sender.getNumber(), 900);
         verify(cardHolderRepository).changeAmount(receiver.getNumber(), 1100);
@@ -166,8 +166,4 @@ public class TransferServiceUnitTests {
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
-
-
 }
-
-
