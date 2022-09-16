@@ -1,6 +1,5 @@
 package ru.netology;
 
-import com.zaxxer.hikari.hibernate.HikariConnectionProvider;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,32 +10,31 @@ import org.testcontainers.containers.GenericContainer;
 import ru.netology.dto.Amount;
 import ru.netology.dto.TransferRequest;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class TransferServiceTestcontainersTest {
-    @Autowired
-    private TestRestTemplate restTemplate;
-
-
-    private static final GenericContainer<?> appRestApi = new GenericContainer<>("restapp")
-            .withExposedPorts(5500);
-
-    @BeforeAll
-    public static void setUp() {
-        appRestApi.start();
-    }
-
-    @Test
-    void requestResponseTest() {
-        HttpEntity<TransferRequest> request = new HttpEntity<>(new TransferRequest(
-                1111111111111111L, "11/22", "111",
-                2222222222222222L, new Amount(100, "RUB")));
-        String response = restTemplate.postForObject("http://localhost:" + appRestApi.getMappedPort(5500) + "/transfer",
-                request, String.class);
-        String expectedMessage = "operationId";
-        assertNotNull(response);
-        assertTrue(response.contains(expectedMessage));
-    }
+//    @Autowired
+//    private TestRestTemplate restTemplate;
+//
+//
+//    private static final GenericContainer<?> appRestApi = new GenericContainer<>("restapp")
+//            .withExposedPorts(5500);
+//
+//    @BeforeAll
+//    public static void setUp() {
+//        appRestApi.start();
+//    }
+//
+//    @Test
+//    void requestResponseTest() {
+//        HttpEntity<TransferRequest> request = new HttpEntity<>(new TransferRequest(
+//                1111111111111111L, "11/22", "111",
+//                2222222222222222L, new Amount(100, "RUB")));
+//        String response = restTemplate.postForObject("http://localhost:" + appRestApi.getMappedPort(5500) + "/transfer",
+//                request, String.class);
+//        String expectedMessage = "operationId";
+//        assertNotNull(response);
+//        assertTrue(response.contains(expectedMessage));
+//    }
 }
