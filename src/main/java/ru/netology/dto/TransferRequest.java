@@ -54,15 +54,4 @@ public class TransferRequest {
     public void setAmount(Amount amount) {
         this.amount = amount;
     }
-
-    @Override
-    public String toString() {
-        return "TransferRequest{" +
-                "cardFromNumber='" + cardFromNumber + '\'' +
-                ", cardFromValidTill='" + cardFromValidTill + '\'' +
-                ", cardFromCVV='" + cardFromCVV + '\'' +
-                ", cardToNumber='" + cardToNumber + '\'' +
-                ", amount=" + amount +
-                '}';
-    }
 }

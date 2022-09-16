@@ -14,5 +14,4 @@ public interface CardHolderRepository extends CrudRepository<Card, Long> {
     @Modifying
     @Query("UPDATE card SET amount = :amount WHERE number = :number")
     void changeAmount(long number, int amount);
-
 }

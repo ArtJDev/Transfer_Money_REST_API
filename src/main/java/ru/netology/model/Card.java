@@ -5,7 +5,7 @@ import org.springframework.data.annotation.Id;
 public class Card {
     @Id
     private long number;
-    private String validtill;
+    private String valid;
     private String cvv;
     private int amount;
     private String currency;
@@ -18,12 +18,12 @@ public class Card {
         this.number = number;
     }
 
-    public String getValidtill() {
-        return validtill;
+    public String getValid() {
+        return valid;
     }
 
-    public void setValidtill(String validtill) {
-        this.validtill = validtill;
+    public void setValid(String valid) {
+        this.valid = valid;
     }
 
     public String getCvv() {
@@ -49,15 +49,4 @@ public class Card {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
-
-//    @Override
-//    public String toString() {
-//        return "Card{" +
-//                "number=" + number +
-//                ", validtill='" + validtill + '\'' +
-//                ", cvv='" + cvv + '\'' +
-//                ", amount=" + amount +
-//                ", currency='" + currency + '\'' +
-//                '}';
-//    }
 }

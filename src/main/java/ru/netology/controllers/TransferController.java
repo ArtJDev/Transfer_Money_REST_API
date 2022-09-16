@@ -1,16 +1,15 @@
 package ru.netology.controllers;
 
-import org.apache.coyote.Response;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 import ru.netology.dto.Amount;
+import ru.netology.dto.ConfirmResponse;
 import ru.netology.dto.TransferRequest;
+import ru.netology.dto.TransferResponse;
 import ru.netology.services.TransferService;
 
-import javax.servlet.http.HttpServletResponse;
-
 @RestController
+@CrossOrigin(origins = "https://serp-ya.github.io")
 public class TransferController {
     private final TransferService transferService;
 
@@ -19,16 +18,23 @@ public class TransferController {
     }
 
     @PostMapping("/transfer")
-    public void transferMoney(@RequestBody TransferRequest request) {
+    @ResponseBody
+    public TransferResponse transferMoney(@RequestBody TransferRequest request) {
         transferService.transferMoney(
-        request.getCardFromNumber(),
-        request.getCardFromValidTill(),
-        request.getCardFromCVV(),
-        request.getCardToNumber(),
+                request.getCardFromNumber(),
+                request.getCardFromValidTill(),
+                request.getCardFromCVV(),
+                request.getCardToNumber(),
                 new Amount(request.getAmount().getValue(), request.getAmount().getCurrency())
         );
-//        System.out.println(request);
-//        System.out.println(transferService.getCardHolderRepository(request.getCardFromNumber()));
-//        System.out.println(transferService.getCardHolderRepository(request.getCardToNumber()));
+        TransferResponse confirmOperation = transferService.transferResponse();
+        return confirmOperation;
+    }
+
+    @PostMapping("/confirmOperation")
+    public ResponseEntity<ConfirmResponse> confirmOperation(@RequestBody ConfirmResponse confirmRequest) {
+        confirmRequest.getOperationId();
+        confirmRequest.getCode();
+        return ResponseEntity.ok().body(confirmRequest);
     }
 }

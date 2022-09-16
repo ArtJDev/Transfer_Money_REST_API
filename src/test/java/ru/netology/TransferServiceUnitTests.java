@@ -32,7 +32,7 @@ public class TransferServiceUnitTests {
     public void transferServiceTransferMoneyTest() {
         Card sender = new Card();
         sender.setNumber(4000);
-        sender.setValidtill("1111");
+        sender.setValid("1111");
         sender.setCvv("333");
         sender.setAmount(1000);
         sender.setCurrency("RUB");
@@ -53,6 +53,12 @@ public class TransferServiceUnitTests {
 
         verify(cardHolderRepository).changeAmount(sender.getNumber(), 900);
         verify(cardHolderRepository).changeAmount(receiver.getNumber(), 1100);
+    }
+
+    @Test
+    void transferServiceTransferResponseTest() {
+        assertNotNull(transferService.transferResponse());
+        assertDoesNotThrow(() -> transferService.transferResponse());
     }
 
     @Test
@@ -107,11 +113,12 @@ public class TransferServiceUnitTests {
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
+
     @Test
     public void cardInvalidCvvExceptionTest() {
         Card sender = new Card();
         sender.setNumber(1000);
-        sender.setValidtill("1111");
+        sender.setValid("1111");
         sender.setCvv("222");
 
         Card receiver = new Card();
@@ -132,11 +139,12 @@ public class TransferServiceUnitTests {
         String actualMessage = exception.getMessage();
         assertTrue(actualMessage.contains(expectedMessage));
     }
+
     @Test
     public void notEnoughMoneyExceptionTest() {
         Card sender = new Card();
         sender.setNumber(1000);
-        sender.setValidtill("1111");
+        sender.setValid("1111");
         sender.setCvv("333");
         sender.setAmount(10);
 

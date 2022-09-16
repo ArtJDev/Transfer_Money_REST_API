@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.netology.dto.Amount;
+import ru.netology.dto.TransferResponse;
 import ru.netology.exceptions.CardInvalidCvvException;
 import ru.netology.exceptions.CardInvalidDateException;
 import ru.netology.exceptions.CardNumberNotFoundException;
@@ -12,17 +13,18 @@ import ru.netology.exceptions.NotEnoughMoneyException;
 import ru.netology.model.Card;
 import ru.netology.repositories.CardHolderRepository;
 
+import java.util.UUID;
+
 @Service
+@Transactional
 public class TransferService {
     private final Logger logger = LoggerFactory.getLogger(TransferService.class);
-
     private final CardHolderRepository cardHolderRepository;
 
     public TransferService(CardHolderRepository cardHolderRepository) {
         this.cardHolderRepository = cardHolderRepository;
     }
 
-    @Transactional
     public void transferMoney(long cardFromNumber, String cardFromValidTill, String cardFromCVV, long cardToNumber, Amount amount) {
         logger.info("Начало транзакции");
         Card sender = cardHolderRepository.findCardByNumber(cardFromNumber)
@@ -31,7 +33,7 @@ public class TransferService {
         Card receiver = cardHolderRepository.findCardByNumber(cardToNumber)
                 .orElseThrow(() -> new CardNumberNotFoundException("Карта получателя " + cardToNumber + " не найдена"));
 
-        if (!cardFromValidTill.equals(sender.getValidtill())){
+        if (!cardFromValidTill.equals(sender.getValid())) {
             throw new CardInvalidDateException("Неверная дата действия карты");
         }
         if (!cardFromCVV.equals(sender.getCvv())) {
@@ -46,12 +48,13 @@ public class TransferService {
 
         cardHolderRepository.changeAmount(cardFromNumber, senderNewAmount);
         cardHolderRepository.changeAmount(cardToNumber, receiverNewAmount);
-
         logger.info("Перевод с карты " + cardFromNumber + " на карту " + cardToNumber
                 + " в сумме " + amount.getValue() + amount.getCurrency() + " успешно осуществлен.");
     }
 
-    public Card getCardHolderRepository(long number) {
-        return cardHolderRepository.findCardByNumber(number).get();
+    public TransferResponse transferResponse() {
+        TransferResponse confirmOperation = new TransferResponse(UUID.randomUUID().toString());
+        logger.info("ID операции: " + confirmOperation.getOperationId());
+        return confirmOperation;
     }
 }

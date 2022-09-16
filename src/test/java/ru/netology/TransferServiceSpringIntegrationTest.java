@@ -27,7 +27,7 @@ class TransferServiceSpringIntegrationTest {
     void transferServiceTransferMoneyTest() {
         Card sender = new Card();
         sender.setNumber(4000);
-        sender.setValidtill("1111");
+        sender.setValid("1111");
         sender.setCvv("333");
         sender.setAmount(1000);
         sender.setCurrency("RUB");
@@ -41,10 +41,9 @@ class TransferServiceSpringIntegrationTest {
         when(cardHolderRepository.findCardByNumber(sender.getNumber())).thenReturn(Optional.of(sender));
         when(cardHolderRepository.findCardByNumber(receiver.getNumber())).thenReturn(Optional.of(receiver));
 
-        transferService.transferMoney(sender.getNumber(), sender.getValidtill(), sender.getCvv(), receiver.getNumber(), amount);
+        transferService.transferMoney(sender.getNumber(), sender.getValid(), sender.getCvv(), receiver.getNumber(), amount);
 
         verify(cardHolderRepository).changeAmount(sender.getNumber(), 900);
         verify(cardHolderRepository).changeAmount(receiver.getNumber(), 1100);
     }
-
 }
