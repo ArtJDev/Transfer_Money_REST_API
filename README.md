@@ -1,5 +1,5 @@
 # Приложение «Сервис перевода денег»
-Стек: Spring Boot, H2 database, Junit, Mockito, Testcontainers, Maven, Docker.
+Стек: Spring Boot, H2 database, JUnit, Mockito, Testcontainers, Maven, Docker.
 ## Описание
 Проект предоставляет сервис для перевода денег с одной карты на другую. Веб приложение (FRONT) подключается к сервису и использует его функционал для перевода денег. Описание веб приложения (FRONT) доступно по адресу https://github.com/serp-ya/card-transfer. Запуск веб приложения осуществляется по ссылке https://serp-ya.github.io/card-transfer/
 ## Запуск приложения
